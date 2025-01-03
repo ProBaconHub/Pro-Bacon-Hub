@@ -293,7 +293,7 @@ function Kavo.CreateLib(kavName, themeList)
 	    		Size = UDim2.new(0,0,0,0),
 	    		Position = UDim2.new(0, Main.AbsolutePosition.X + (Main.AbsoluteSize.X / 2), 0, Main.AbsolutePosition.Y + (Main.AbsoluteSize.Y / 2))
 	    	}):Play()
-            closeuitween.Completed:Wait()
+            task.wait(.11)
             ScreenGui:Destroy()
         end)
 
@@ -429,7 +429,7 @@ function Kavo.CreateLib(kavName, themeList)
 		    	Position = UDim2.new(0, mainframepos.X - (525 / 2), 0, mainframepos.Y - (318 / 2))
 		    }):Play()
             task.spawn(function()
-                tweenmainui.Completed:Wait()
+                task.wait(0.11)
                 animationdone = true
             end)
             repeat
