@@ -1028,10 +1028,14 @@ function Kavo.CreateLib(kavName, themeList)
 
 
                 updateSectionFrame()
-                                UpdateSize()
+                UpdateSize()
             
                 local btn = textboxElement
                 local infBtn = viewInfo
+
+                if default_text ~= "" then
+                    callback(default_text)
+                end
 
                 btn.MouseButton1Click:Connect(function()
                     if focusing then
