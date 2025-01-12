@@ -1246,7 +1246,9 @@ function Kavo.CreateLib(kavName, themeList)
 
                     btn.MouseButton1Click:Connect(function()
                         if not focusing then
-                            pcall(callback, not toggled)
+                            task.spawn(function()
+                                pcall(callback, not toggled)
+                            end
                             if toggled == false then
                                 game.TweenService:Create(img, TweenInfo.new(0.1, Enum.EasingStyle.Linear,Enum.EasingDirection.In), {
                                     ImageTransparency = 0
