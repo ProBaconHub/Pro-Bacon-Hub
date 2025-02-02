@@ -228,7 +228,7 @@ function emoteUI:CreateUI()
                 end
             end)
         end
-        input.Changed:Connect(function(input)
+        input.Changed:Connect(function()
             if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
                 dragInput = input
             end
