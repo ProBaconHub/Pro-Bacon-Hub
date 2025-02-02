@@ -1,0 +1,113 @@
+local ProBaconHub = {}
+
+local Noclip, Clip, noclipparts = nil, nil, {}
+function ProBaconHub:Noclip(state)
+    state = state or false
+    if state then
+        Clip = false
+	    local function Nocl()
+	    	if Clip == false and game.Players.LocalPlayer.Character then
+	    		for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+	    			if v:IsA('BasePart') and v.CanCollide then
+                        table.insert(noclipparts, v.Name)
+	    				v.CanCollide = false
+	    			end
+	    		end
+	    	end
+	    end
+	    Noclip = game:GetService('RunService').RenderStepped:Connect(Nocl)
+    else
+        if Noclip then
+            Noclip:Disconnect()
+            Noclip = nil
+        end
+        for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+            if v:IsA('BasePart') and table.find(noclipparts, v.Name) then
+                v.CanCollide = true
+            end
+        end
+        noclipparts = {}
+        Clip = true
+    end
+end
+function ProBaconHub:VelocityTeleport(x, y, z, Speed)
+    ProBaconHub:Noclip(true)
+    local TargetPosition = Vector3.new(x, y, z)
+	local MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+	local PlayerVelocity = Instance.new("BodyVelocity")
+	PlayerVelocity.MaxForce = MaxForce
+	PlayerVelocity.Velocity = Vector3.new(0, 0, 0)
+	PlayerVelocity.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+	while game:GetService("RunService").Heartbeat:Wait() do
+	    local CurrentPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+        local Direction = (TargetPosition - CurrentPosition).unit
+	    local Distance = (TargetPosition - CurrentPosition).magnitude
+        local DistanceCheck = Speed/35
+	    if Distance >= DistanceCheck then
+            game.Players.LocalPlayer.Character.Humanoid.Sit = false
+	        PlayerVelocity.Velocity = Direction * Speed
+	    else
+            ProBaconHub:Noclip(false)
+	        PlayerVelocity:Destroy()
+	        for i = 1, 5 do
+	            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(TargetPosition)
+	            game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                task.wait()
+	        end
+	        break
+	    end
+	end
+    ProBaconHub:Noclip(false)
+end
+function ProBaconHub:InputKey(key, duration, cooldown)
+    game:GetService('VirtualInputManager'):SendKeyEvent(true, key, false, game)
+    task.wait(duration)
+    game:GetService('VirtualInputManager'):SendKeyEvent(false, key, false, game)
+    task.wait(cooldown)
+end
+function ProBaconHub:GetPlayerWithClosestName(name, truename)
+    if truename then
+        for _, v in pairs(game.Players:GetPlayers()) do
+            if string.find(string.lower(v.Name), string.lower(name)) ~= nil then
+                return v
+            end
+        end
+    else
+        for _, v in pairs(game.Players:GetPlayers()) do
+            if string.find(string.lower(v.DisplayName), string.lower(name)) ~= nil then
+                return v
+            end
+        end
+    end
+    return nil
+end
+function ProBaconHub:GetPlayersCharacters()
+    local table = {}
+    for _,v in pairs(game:GetService("Players"):GetPlayers()) do
+        if v.Character then
+            table.insert(table, v.Character)
+        end
+    end
+    return table
+end
+function ProBaconHub:StringToVector3(txt)
+    txt:gsub(" ", "")
+	local x, y, z = table.unpack(string.split(txt, ","))
+    return Vector3.new(x, y, z)
+end
+function ProBaconHub:StringToCFrame(txt)
+    local Split = string.split(txt, ",")
+    return CFrame.new(Split[1],Split[2],Split[3],Split[4],Split[5],Split[6],Split[7],Split[8],Split[9],Split[10],Split[11],Split[12])
+end
+function ProBaconHub:StringToColor3(txt)
+    txt:gsub(" ", "")
+	local r, g, b = table.unpack(string.split(txt, ","))
+    return Color3.new(r, g, b)
+end
+function ProBaconHub:StringToRGB(txt)
+    txt:gsub(" ", "")
+	local r, g, b = table.unpack(string.split(txt, ","))
+    return Color3.fromRGB(r, g, b)
+end
+
+return ProBaconHub
